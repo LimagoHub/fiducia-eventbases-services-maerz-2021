@@ -14,23 +14,26 @@ import de.fiducia.kafkaproducer.model.Person;
 
 
 @Component
-public class MyCoomandLineRunner implements CommandLineRunner {
+public class MyCommandLineRunner implements CommandLineRunner {
 
 	@Autowired
 	private MyChannels channels;
 	
+	@Autowired
+	private PersonErfasstRepository repo;
 	
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Hallo Welt");
 		
-		Person person = Person.builder().id(UUID.randomUUID().toString()).vorname("John").nachname("Doe").build();
-
-		PersonErfasstEvent event = PersonErfasstEvent.builder().payload(person).build();
-		
-		Message<PersonErfasstEvent> message = MessageBuilder.withPayload(event).build();
-		
-		channels.personErfasstOut().send(message);
+		for (int i = 0; i < 1_000; i++) {
+			Person person = Person.builder().id(UUID.randomUUID().toString()).vorname("John").nachname("Doe").build();
+			PersonErfasstEvent event = PersonErfasstEvent.builder().payload(person).build();
+			Message<PersonErfasstEvent> message = MessageBuilder.withPayload(event).build();
+			channels.personErfasstOut().send(message);
+			repo.save(event);
+		}
+		System.out.println("Fertig");
 	}
 
 }

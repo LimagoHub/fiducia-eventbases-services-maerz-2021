@@ -1,5 +1,8 @@
 package de.fiducia.kafkaproducer.event;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+
 import de.fiducia.kafkaproducer.model.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +13,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class PersonErfasstEvent extends BaseEvent {
 	
+	@Embedded
 	private Person payload;
 	
 	
